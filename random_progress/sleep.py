@@ -1,9 +1,9 @@
 import random
 import time
 
-from config import DEFAULT_CONFIG
-from services import (args, config_file, env_max_number, env_min_number,
-                      env_sleep_time)
+from random_progress.config import DEFAULT_CONFIG
+from random_progress.services import (args, config_file, env_max_number, env_min_number,
+                                      env_sleep_time)
 from tqdm import tqdm
 
 data = dict()
@@ -12,7 +12,7 @@ list_max_number = [
     DEFAULT_CONFIG.get("max_number"),
     env_max_number,
     config_file["CONFIG_FILE"].get("max_number"),
-    args.min_number,
+    args.max_number,
 ]
 
 list_max = [i for i in list_max_number if i is not None]
@@ -42,6 +42,3 @@ def progress(times: int, number: int):
     for _ in tqdm(range(number)):
         time.sleep(times)
         pass
-
-
-print(progress(times=list_sleep[-1], number=random_numbers))
