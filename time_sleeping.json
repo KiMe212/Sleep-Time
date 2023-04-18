@@ -2,6 +2,6 @@
   "CONFIG_FILE": {
     "min_number": 3,
     "max_number": 30,
-    "sleep_time": 300
+    "sleep_time": 3
   }
 }
