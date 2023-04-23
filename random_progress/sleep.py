@@ -1,44 +1,42 @@
+import argparse
+import json
 import random
-import time
+
+from dotenv import dotenv_values
 
 from random_progress.config import DEFAULT_CONFIG
-from random_progress.services import (args, config_file, env_max_number, env_min_number,
-                                      env_sleep_time)
-from tqdm import tqdm
+from random_progress.schemas import Item
+from random_progress.services import filter_of_none
 
-data = dict()
+# write on terminal
+parser = argparse.ArgumentParser()
+parser.add_argument("-min_number", type=int, action="store")
+parser.add_argument("-max_number", type=int, action="store")
+parser.add_argument("-sleep_time", type=int, action="store")
+args = parser.parse_args()
+argses = {
+    "min_number": args.min_number,
+    "max_number": args.max_number,
+    "sleep_time": args.sleep_time,
+}
+dict_args = filter_of_none(argses)
 
-list_max_number = [
-    DEFAULT_CONFIG.get("max_number"),
-    env_max_number,
-    config_file["CONFIG_FILE"].get("max_number"),
-    args.max_number,
-]
+# read JSON file
+try:
+    with open(
+        "D:/Python/PYTHON_PROJECTS/pythonProjectefromVlad/time_sleeping.json"
+    ) as file:
+        config_file = json.loads(file.read())
+except FileNotFoundError:
+    config_file = None
+dict_json_file = filter_of_none(config_file)
 
-list_max = [i for i in list_max_number if i is not None]
+# env environment
+env_config = dotenv_values()
+dict_env = filter_of_none(env_config)
 
-list_min_number = [
-    DEFAULT_CONFIG.get("min_number"),
-    env_min_number,
-    config_file["CONFIG_FILE"].get("min_number"),
-    args.min_number,
-]
+# default
+dict_default = dict(DEFAULT_CONFIG)
 
-list_min = [i for i in list_min_number if i is not None]
-
-list_sleep_time = [
-    DEFAULT_CONFIG.get("sleep_time"),
-    env_sleep_time,
-    config_file["CONFIG_FILE"].get("sleep_time"),
-    args.sleep_time,
-]
-
-list_sleep = [i for i in list_sleep_time if i is not None]
-
-random_numbers = random.randrange(list_min[-1], list_max[-1])
-
-
-def progress(times: int, number: int):
-    for _ in tqdm(range(number)):
-        time.sleep(times)
-        pass
+item = Item(**{**dict_default, **dict_env, **dict_json_file, **dict_args})
+random_numbers = random.randrange(item.min_number, item.max_number)

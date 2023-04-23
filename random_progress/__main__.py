@@ -1,4 +1,5 @@
-from random_progress.sleep import progress, list_sleep, random_numbers
+from random_progress.services import progress
+from random_progress.sleep import item, random_numbers
 
-if __name__ == '__main__':
-    progress(times=list_sleep[-1], number=random_numbers)
+if __name__ == "__main__":
+    print(progress(time=item.sleep_time, number=random_numbers))
