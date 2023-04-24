@@ -8,6 +8,8 @@ def filter_of_none(start_dict: dict):
     for k, v in start_dict.items():
         if v is not None:
             final_dict.update({k: float(v)})
+            if float(v) < 0:
+                raise TypeError("you write negative number")
     return final_dict
 
 

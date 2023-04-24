@@ -10,7 +10,9 @@ from random_progress.services import filter_of_none
 
 # write on terminal
 parser = argparse.ArgumentParser()
-parser.add_argument("-min_number", type=int, action="store")
+parser.add_argument(
+    "-min_number", type=int, action="store", help="write integer or float"
+)
 parser.add_argument("-max_number", type=int, action="store")
 parser.add_argument("-sleep_time", type=int, action="store")
 args = parser.parse_args()
