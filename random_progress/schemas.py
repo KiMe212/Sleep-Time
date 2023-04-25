@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass()
-class Item:
+class AppConfig:
     min_number: int
     max_number: int
     sleep_time: int

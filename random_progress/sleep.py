@@ -1,44 +1,61 @@
 import argparse
 import json
 import random
+from json import JSONDecodeError
 
 from dotenv import dotenv_values
 
 from random_progress.config import DEFAULT_CONFIG
-from random_progress.schemas import Item
-from random_progress.services import filter_of_none
+from random_progress.schemas import AppConfig
+from random_progress.services import parsing
+from random_progress.validators import check_none_and_type, validate_negative
 
-# write on terminal
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "-min_number", type=int, action="store", help="write integer or float"
+
+def write_cli():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-min_number", type=float, action="store", help="write float")
+    parser.add_argument("-max_number", type=float, action="store", help="write float")
+    parser.add_argument("-sleep_time", type=float, action="store", help="write float")
+    args = parser.parse_args()
+    argses = {
+        "min_number": args.min_number,
+        "max_number": args.max_number,
+        "sleep_time": args.sleep_time,
+    }
+    return argses
+
+
+def read_config_file():
+    # read JSON file
+    try:
+        with open(
+            "D:/Python/PYTHON_PROJECTS/pythonProjectefromVlad/time_sleeping.json"
+        ) as file:
+            config_file = json.loads(file.read())
+    except (FileNotFoundError, JSONDecodeError):
+        config_file = {}
+    return config_file
+
+
+def read_env():
+    # env environment
+    env_config = dict(dotenv_values())
+    return env_config
+
+
+filtered_configs = list(
+    map(
+        check_none_and_type,
+        [DEFAULT_CONFIG, read_env(), read_config_file(), write_cli()],
+    )
 )
-parser.add_argument("-max_number", type=int, action="store")
-parser.add_argument("-sleep_time", type=int, action="store")
-args = parser.parse_args()
-argses = {
-    "min_number": args.min_number,
-    "max_number": args.max_number,
-    "sleep_time": args.sleep_time,
-}
-dict_args = filter_of_none(argses)
-
-# read JSON file
 try:
-    with open(
-        "D:/Python/PYTHON_PROJECTS/pythonProjectefromVlad/time_sleeping.json"
-    ) as file:
-        config_file = json.loads(file.read())
-except FileNotFoundError:
-    config_file = None
-dict_json_file = filter_of_none(config_file)
+    app_config = AppConfig(**parsing(filtered_configs))
+    validate_negative(app_config.__dict__)
 
-# env environment
-env_config = dotenv_values()
-dict_env = filter_of_none(env_config)
+    if app_config.min_number > app_config.max_number:
+        raise TypeError("max_number should be more min_number")
+except TypeError as err:
+    raise TypeError(err)
 
-# default
-dict_default = dict(DEFAULT_CONFIG)
-
-item = Item(**{**dict_default, **dict_env, **dict_json_file, **dict_args})
-random_numbers = random.randrange(item.min_number, item.max_number)
+random_numbers = random.randrange(app_config.min_number, app_config.max_number)

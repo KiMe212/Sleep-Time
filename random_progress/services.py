@@ -3,14 +3,11 @@ from time import sleep
 from tqdm import tqdm
 
 
-def filter_of_none(start_dict: dict):
-    final_dict = {}
-    for k, v in start_dict.items():
-        if v is not None:
-            final_dict.update({k: float(v)})
-            if float(v) < 0:
-                raise TypeError("you write negative number")
-    return final_dict
+def parsing(lst: list):
+    pars_dict = dict()
+    for i in lst:
+        pars_dict.update(**i)
+    return pars_dict
 
 
 def progress(time: int | float, number: int | float):
