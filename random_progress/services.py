@@ -6,11 +6,11 @@ from dotenv import dotenv_values
 
 from random_progress.config import DEFAULT_CONFIG
 from random_progress.schemas import AppConfig
-from random_progress.validators import validate_none, validate_config
+from random_progress.validators import validate_none, validate_config, validate_data_types
 
 
 def get_config():
-    config_data = _get_config_data()
+    config_data = validate_data_types(_get_config_data())
     try:
         app_config = AppConfig(**config_data)
         validate_config(app_config)
@@ -27,7 +27,7 @@ def _get_config_data():
 
 
 def _get_cli_config():
-    args_params = get_args()
+    args_params = _get_args()
     sleep_and_number_args = {
         "min_number": args_params.min_number,
         "max_number": args_params.max_number,
@@ -37,7 +37,7 @@ def _get_cli_config():
 
 
 def _get_json_config():
-    path_args = get_args()
+    path_args = _get_args()
     try:
         with open(path_args.path) as file:
             config_file = json.loads(file.read())
@@ -46,7 +46,7 @@ def _get_json_config():
     return config_file
 
 
-def get_args():
+def _get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-min_number", type=float, action="store", help="write min number")
     parser.add_argument("-max_number", type=float, action="store", help="write max number")
@@ -58,5 +58,5 @@ def get_args():
 
 
 def _get_env_config():
-    env_config = dict(dotenv_values())
-    return env_config
+    return dotenv_values()
+
