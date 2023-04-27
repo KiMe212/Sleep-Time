@@ -24,11 +24,11 @@ def validate_data_types(start_dict: dict):
 
 
 def _validate_numbers_non_negative(config: AppConfig):
-    for k, v in asdict(config).items():
+    for v in asdict(config).values():
         if v < 0:
             raise TypeError("you write negative number")
 
 
 def _validate_numbers(config: AppConfig):
     if config.min_number > config.max_number:
-        raise TypeError("min number more max number")
+        raise TypeError("min number can't be greater than")

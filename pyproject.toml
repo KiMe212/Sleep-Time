@@ -7,10 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-
-[tool.poetry.dev-dependencies]
 tqdm = "^4.65.0"
 python-dotenv = "^1.0.0"
+
+[tool.poetry.dev-dependencies]
 pre-commit = "^3.2.2"
 
 [build-system]
