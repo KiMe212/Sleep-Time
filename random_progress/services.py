@@ -6,7 +6,7 @@ from dotenv import dotenv_values
 
 from random_progress.config import DEFAULT_CONFIG
 from random_progress.schemas import AppConfig
-from random_progress.validators import _validate_data_types, validate_config
+from random_progress.validators import validate_data_types, validate_config
 
 
 def get_config():
@@ -20,9 +20,9 @@ def get_config():
 
 
 def _get_config_data():
-    env_config = _validate_data_types(_get_env_config())
-    json_config = _validate_data_types(_get_json_config())
-    cli_config = _validate_data_types(_get_cli_config())
+    env_config = validate_data_types(_get_env_config())
+    json_config = validate_data_types(_get_json_config())
+    cli_config = validate_data_types(_get_cli_config())
     return {**DEFAULT_CONFIG, **env_config, **json_config, **cli_config}
 
 

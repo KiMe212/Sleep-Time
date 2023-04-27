@@ -6,15 +6,15 @@ def validate_config(config: AppConfig):
     _validate_numbers(config)
 
 
-def _validate_data_types(config: dict):
-    def validate_none(config_dict: dict):
+def validate_data_types(config: dict):
+    def _validate_none(config_dict: dict):
         dict_filter_none = dict()
         for k, v in config_dict.items():
             if v is not None:
                 dict_filter_none[k] = v
         return dict_filter_none
 
-    def validate_type(start_dict: dict):
+    def _validate_type(start_dict: dict):
         final_dict = dict()
         for k, v in start_dict.items():
             try:
@@ -23,7 +23,7 @@ def _validate_data_types(config: dict):
                 raise ValueError("argument should be float")
         return final_dict
 
-    return validate_type(validate_none(config))
+    return _validate_type(_validate_none(config))
 
 
 def _validate_numbers_non_negative(app: AppConfig):
