@@ -26,17 +26,6 @@ def _get_config_data():
     return {**DEFAULT_CONFIG, **env_config, **json_config, **cli_config}
 
 
-def parsers():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-min_number", type=float, action="store", help="write float")
-    parser.add_argument("-max_number", type=float, action="store", help="write float")
-    parser.add_argument("-sleep_time", type=float, action="store", help="write float")
-    parser.add_argument("-path", default="time_sleeping.json")
-
-    args = parser.parse_args()
-    return args
-
-
 def _get_cli_config():
     args_params = parsers()
     argses = {
@@ -55,6 +44,17 @@ def _get_json_config():
     except (FileNotFoundError, JSONDecodeError):
         config_file = {}
     return config_file
+
+
+def parsers():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-min_number", type=float, action="store", help="write float")
+    parser.add_argument("-max_number", type=float, action="store", help="write float")
+    parser.add_argument("-sleep_time", type=float, action="store", help="write float")
+    parser.add_argument("-path", default="time_sleeping.json")
+
+    args = parser.parse_args()
+    return args
 
 
 def _get_env_config():
