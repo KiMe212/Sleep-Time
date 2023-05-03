@@ -2,7 +2,7 @@ import argparse
 import json
 from json import JSONDecodeError
 
-from dotenv import dotenv_values
+from dotenv.main import dotenv_values
 
 from random_progress.config import DEFAULT_CONFIG
 from random_progress.schemas import AppConfig
